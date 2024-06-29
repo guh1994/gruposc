@@ -18,7 +18,7 @@ public class Customer {
     private Integer id;
 
     @Column(name = "cnpj")
-    private Long cnpj;
+    private String cnpj;
 
     @Column(name = "razao_social")
     private String razaoSocial;
@@ -37,5 +37,6 @@ public class Customer {
         this.login = customer.getLogin();
         this.password = customer.getPassword();
         this.razaoSocial = customer.getRazaoSocial();
+        this.status = customer.getStatus();
     }
 }

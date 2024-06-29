@@ -15,6 +15,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     CustomerRepository repository;
 
+    private static  final Integer ACTIVATED = 1;
+    private static  final Integer  DISABLED = 2 ;
+
 
     public RestEntityResponse<List<Customer>> getCustomers() {
 
@@ -22,7 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (customers.isEmpty()) {
             return RestEntityResponse.<List<Customer>>builder()
-                    .success(true)
+                    .success(false)
                     .messages(List.of("Customers doesn't exists"))
                     .build();
         }
@@ -44,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     }
 
-    public RestEntityResponse<Customer> getCustomerByCnpj(Long cnpj) {
+    public RestEntityResponse<Customer> getCustomerByCnpj(String cnpj) {
 
         boolean existByCnpj = repository.existsByCnpj(cnpj);
         if (!existByCnpj) {
@@ -65,7 +68,14 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer == null) {
             return RestEntityResponse.<Customer>builder()
                     .success(false)
-                    .messages(List.of("User doesn't exists"))
+                    .messages(List.of("User not found"))
+                    .build();
+        }
+
+        if(customer.getStatus().equals(DISABLED)){
+            return RestEntityResponse.<Customer>builder()
+                    .success(false)
+                    .messages(List.of("User disabled"))
                     .build();
         }
 
@@ -92,6 +102,7 @@ public class CustomerServiceImpl implements CustomerService {
                     .build();
         }
 
+        customer.setStatus(ACTIVATED);
         Customer response = repository.save(customer);
 
         return RestEntityResponse.<Customer>builder().success(true).entity(response).build();
@@ -138,7 +149,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (!existCustomer) {
             return RestEntityResponse.<Customer>builder()
                     .success(false)
-                    .messages(List.of("Customer doesn't exists"))
+                    .messages(List.of("Customer not Found"))
                     .build();
         }
 
@@ -150,6 +161,7 @@ public class CustomerServiceImpl implements CustomerService {
     private List<String> validadeCommons(Customer customer) {
 
         List<String> messages = new ArrayList<>();
+
 
         if (customer.getLogin() == null) {
 

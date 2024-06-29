@@ -11,11 +11,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     List<Customer> findCustomerByRazaoSocial(String razaoSocial);
 
-    Customer findCustomerByCnpj(Long cnpj);
+    Customer findCustomerByCnpj(String cnpj);
 
     Customer findCustomerByLoginAndPassword(String login, String password);
 
-    boolean existsByCnpj(Long cnpj);
+    boolean existsByCnpj(String cnpj);
 
     boolean existsByRazaoSocial(String razaoSocial);
 }

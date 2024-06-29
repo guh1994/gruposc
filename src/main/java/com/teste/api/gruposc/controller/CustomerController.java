@@ -41,9 +41,9 @@ public class CustomerController {
 
     }
 
-    @GetMapping("{cnpj}")
-    public ResponseEntity<RestEntityResponse<Customer>> getCustomerByRazaoSocial(
-            @PathVariable(name = "cnpj") Long cnpj) {
+    @GetMapping("/cnpj")
+    public ResponseEntity<RestEntityResponse<Customer>> getCustomerByCnpj(
+            @RequestParam(name = "cnpj") String cnpj) {
 
         RestEntityResponse<Customer> response = service.getCustomerByCnpj(cnpj);
 

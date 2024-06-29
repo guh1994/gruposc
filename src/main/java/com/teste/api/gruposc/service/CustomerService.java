@@ -11,7 +11,7 @@ public interface CustomerService {
 
     RestEntityResponse<List<Customer>> getCustomersByRazaoSocial( String razaoSocial);
 
-    RestEntityResponse<Customer> getCustomerByCnpj( Long CNPJ);
+    RestEntityResponse<Customer> getCustomerByCnpj( String CNPJ);
 
     RestEntityResponse<Customer> loginCustomer ( String user, String password);
 
