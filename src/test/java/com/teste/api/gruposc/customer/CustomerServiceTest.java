@@ -4,16 +4,12 @@ import com.teste.api.gruposc.model.Customer;
 import com.teste.api.gruposc.repository.CustomerRepository;
 import com.teste.api.gruposc.service.CustomerServiceImpl;
 import com.teste.api.gruposc.validator.RestEntityResponse;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.junit.Rule;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -57,13 +53,13 @@ class CustomerServiceTest {
         Mockito.when(repository.findCustomerByCnpj(CNPJ)).thenReturn(customer);
         Mockito.when(repository.findCustomerByLoginAndPassword(LOGIN, PASSWORD)).thenReturn(customer);
         Mockito.when(repository.save(any())).thenReturn(customer);
+        Mockito.when(customer.getStatus()).thenReturn(STATUS_ACTIVATED);
     }
 
 
     @Test
     public void shouldGetCustomer() {
 
-        Mockito.when(customer.getStatus()).thenReturn(STATUS_ACTIVATED);
 
         RestEntityResponse<List<Customer>> customers = subject.getCustomers();
 
@@ -95,7 +91,6 @@ class CustomerServiceTest {
 
     @Test
     public void shouldGetCustomersByRazaoSocial() {
-        Mockito.when(customer.getStatus()).thenReturn(STATUS_ACTIVATED);
         Mockito.when(repository.existsByRazaoSocial(customer.getRazaoSocial())).thenReturn(true);
 
         RestEntityResponse<List<Customer>> customersByRazaoSocial = subject.getCustomersByRazaoSocial(customer.getRazaoSocial());
@@ -111,7 +106,11 @@ class CustomerServiceTest {
     }
 
     @Test
-    void shouldReturnErrorMessageCustomersNotFound() {
+    void shouldReturnErrorMessageCustomersNotFoundWhenFindCustomerByRazaoSocial() {
+        RestEntityResponse<List<Customer>> customersByRazaoSocial = subject.getCustomersByRazaoSocial(customer.getRazaoSocial());
+
+        assertEquals(List.of("Customers not found"),customersByRazaoSocial.getMessages());
+        assertFalse(customersByRazaoSocial.isSuccess());
 
     }
 
