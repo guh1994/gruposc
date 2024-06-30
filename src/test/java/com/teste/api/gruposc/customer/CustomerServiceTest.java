@@ -21,8 +21,7 @@ import org.mockito.quality.Strictness;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,6 +76,8 @@ class CustomerServiceTest {
         assertEquals(LOGIN, customerTest.getLogin());
         assertEquals(PASSWORD, customerTest.getPassword());
         assertEquals(STATUS_ACTIVATED, customerTest.getStatus());
+        assertTrue(customers.isSuccess());
+
     }
 
 
@@ -87,19 +88,30 @@ class CustomerServiceTest {
 
         RestEntityResponse<List<Customer>> customers = subject.getCustomers();
 
-        assertEquals(List.of("Customers doesn't exists"),customers.getMessages());
+        assertEquals(List.of("Customers doesn't exists"), customers.getMessages());
         assertFalse(customers.isSuccess());
-
     }
 
 
     @Test
     public void shouldGetCustomersByRazaoSocial() {
+        Mockito.when(customer.getStatus()).thenReturn(STATUS_ACTIVATED);
+        Mockito.when(repository.existsByRazaoSocial(customer.getRazaoSocial())).thenReturn(true);
 
+        RestEntityResponse<List<Customer>> customersByRazaoSocial = subject.getCustomersByRazaoSocial(customer.getRazaoSocial());
+
+        Customer customerTest = customersByRazaoSocial.getEntity().get(0);
+        assertEquals(ID, customerTest.getId());
+        assertEquals(CNPJ, customerTest.getCnpj());
+        assertEquals(RAZAO_SOCIAL, customerTest.getRazaoSocial());
+        assertEquals(LOGIN, customerTest.getLogin());
+        assertEquals(PASSWORD, customerTest.getPassword());
+        assertEquals(STATUS_ACTIVATED, customerTest.getStatus());
+        assertTrue(customersByRazaoSocial.isSuccess());
     }
 
     @Test
-    void shouldReturnMessageCustomersNotFound() {
+    void shouldReturnErrorMessageCustomersNotFound() {
 
     }
 
