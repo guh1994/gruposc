@@ -18,4 +18,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     boolean existsByCnpj(String cnpj);
 
     boolean existsByRazaoSocial(String razaoSocial);
+
 }

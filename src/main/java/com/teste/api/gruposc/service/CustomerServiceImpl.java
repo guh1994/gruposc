@@ -126,14 +126,11 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         Customer customerByCnpj = repository.findCustomerByCnpj(customer.getCnpj());
-        if (!customerByCnpj.getLogin().contains(customer.getLogin())) {
-            return RestEntityResponse.<Customer>builder().success(false).messages(List.of("Login already exists, you can't change.")).build();
-        }
 
         customerByCnpj.update(customer);
-        repository.save(customerByCnpj);
+        Customer customerUpdated = repository.save(customerByCnpj);
 
-        return RestEntityResponse.<Customer>builder().success(true).entity(customerByCnpj).build();
+        return RestEntityResponse.<Customer>builder().success(true).entity(customerUpdated).build();
 
     }
 
