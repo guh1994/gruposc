@@ -18,9 +18,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,8 +79,16 @@ class CustomerServiceTest {
         assertEquals(STATUS_ACTIVATED, customerTest.getStatus());
     }
 
+
     @Test
-    public void shouldReturnMessageCustomersDoesntExist() {
+    public void shouldReturnErrorMessageCustomersDoesntExist() {
+
+        Mockito.when(repository.findAll()).thenReturn(Collections.emptyList());
+
+        RestEntityResponse<List<Customer>> customers = subject.getCustomers();
+
+        assertEquals(List.of("Customers doesn't exists"),customers.getMessages());
+        assertFalse(customers.isSuccess());
 
     }
 
