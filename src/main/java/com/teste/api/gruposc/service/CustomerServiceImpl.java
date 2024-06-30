@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
                     .messages(List.of("Customers not found"))
                     .build();
         }
-        List<Customer> customers = repository.findCustomerByRazaoSocial(razaoSocial);
+        List<Customer> customers = repository.findCustomersByRazaoSocial(razaoSocial);
 
         return RestEntityResponse.<List<Customer>>builder().success(true).entity(customers).build();
 
